@@ -1,4 +1,4 @@
-123
+과제 제출 및 팀 협업용 깃허브 입니다
 
 <!--
 **odh1012/odh1012** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
