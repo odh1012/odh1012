@@ -273,7 +273,7 @@
                 }
                 else
                 {
-                    Console.WriteLine("존재하지 않는 아이템입니다.");
+                    Console.WriteLine("잘못된 입력입니다.");
                 }
             }
         }
