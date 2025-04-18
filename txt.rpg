@@ -1,0 +1,284 @@
+﻿namespace TXT_RPG
+{
+    internal class GAME
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
+            Console.WriteLine("이름을 알려주세요.");
+            Console.WriteLine();
+
+            string name = Console.ReadLine();
+            Console.WriteLine();
+
+
+            character player = null;
+
+            while (true)
+            {
+                Console.WriteLine("원하는 직업을 선택하세요.");
+                Console.WriteLine();
+                Console.WriteLine("1.전사 / 2.마법사 / 3.궁수");
+                Console.WriteLine();
+                string input = Console.ReadLine();
+                Console.WriteLine();
+
+                switch (input)
+                {
+                    case "1":
+                        Console.WriteLine("전사를 선택하셨습니다.");
+                        Console.WriteLine("전사는 공격력과 방어력이 균형잡혀 있으며 체력이 높습니다.");
+                        player = new character(name, "전사");
+                        break;
+                    case "2":
+                        Console.WriteLine("마법사를 선택하셨습니다.");
+                        Console.WriteLine("마법사는 공격력높고 범위공격을 할 수 있습니다 대신 방어와 체력이 약합니다.");
+                        player = new character(name, "마법사");
+                        break;
+                    case "3":
+                        Console.WriteLine("궁수를 선택하셨습니다.");
+                        Console.WriteLine("궁수는 원거리 공격력이 높은편이고 원거리 공격이 가능합니다.");
+                        player = new character(name, "궁수");
+                        break;
+                    case "300":
+                        Console.WriteLine("스파르탄을 선택하셨습니다."); // 히든직업
+                        Console.WriteLine("스파르탄은 용맹한 스파르타의 용사입니다 방어는 필요 없습니다.");
+                        player = new character(name, "스파르탄");
+                        break;
+                    default:
+                        Console.WriteLine("잘못된 입력입니다.");
+                        continue; // 잘못된 입력 시 반복문 처음으로 돌아감
+                }
+                break;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine($"Unity 마을에 오신것을 환영합니다 {name} 님!");
+
+            while (true)
+            {
+                Console.WriteLine("무엇을 하시겠어요?");
+                Console.WriteLine();
+                Console.WriteLine("1.상태보기 / 2.인벤토리 / 3.상점");
+                Console.WriteLine();
+                string input2 = Console.ReadLine();
+                Console.WriteLine();
+
+                switch (input2)
+                {
+                    case "1":
+                        while (true)
+                        {
+                            Console.WriteLine("상태를 확인합니다.");
+                            player.Status(); // 스탯창 출력
+                            Console.WriteLine("0. 나가기");
+                            string backInput = Console.ReadLine();
+                            if (backInput == "0")
+                                break; // 이전 화면으로 돌아감
+                        }
+
+                        break;
+                    case "2":
+                        while (true)
+                        {
+                            Console.WriteLine("인벤토리를 확인합니다.");
+                            player.ShowInventory(); // 인벤토리 출력
+                            Console.WriteLine("0. 나가기");
+                            string backInput = Console.ReadLine();
+                            if (backInput == "0")
+                                break; // 이전 화면으로 돌아감
+                        }
+                        break;
+
+                    case "3":
+                        Shop shop = new Shop();
+                        while (true)
+                        {
+                            shop.ShowItems(player);
+                            Console.WriteLine("1. 아이템 구매 / 0. 나가기");
+                            string shopInput = Console.ReadLine();
+
+                            switch (shopInput)
+                            {
+                                case "1":
+                                    shop.BuyItem(player);
+                                    break;
+                                case "0":
+                                    Console.WriteLine("상점에서 나갑니다.");
+                                    break;
+                                default:
+                                    Console.WriteLine("잘못된 입력입니다.");
+                                    continue;
+                            }
+
+                            if (shopInput == "0")
+                                break;
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("잘못된 입력입니다.");
+                        continue; // 잘못된 입력 시 반복문 처음으로 돌아감
+                }
+            }
+        }
+        
+        internal class character
+        {
+            private int lv;
+            private string name;
+            private string job;
+            private int attack;
+            private int defense;
+            private int hp;
+            private int gold;
+            private List<string> inventory; // 인벤토리 추가
+
+            public int Gold
+            {
+                get { return gold; }
+                set { gold = value; }
+            }
+            public character(string name, string job)
+            {
+                this.name = name;
+                this.job = job;
+                this.lv = 1;
+                this.gold = 1500;
+                this.inventory = new List<string>();
+
+                // 직업에 따른 스탯 설정
+                switch (job)
+                {
+                    case "전사":
+                        this.attack = 10;
+                        this.defense = 5;
+                        this.hp = 100;
+                        break;
+                    case "마법사":
+                        this.attack = 15;
+                        this.defense = 0;
+                        this.hp = 50;
+                        break;
+                    case "궁수":
+                        this.attack = 12;
+                        this.defense = 3;
+                        this.hp = 80;
+                        break;
+                    case "스파르탄": // 히든 직업
+                        this.attack = 30;
+                        this.defense = 0;
+                        this.hp = 120;
+                        break;
+                }
+            }
+
+            // 상태창 출력 메서드
+            public void Status()
+            {
+                Console.WriteLine("===== 상태창 =====");
+                Console.WriteLine($"이름: {name}");
+                Console.WriteLine($"직업: {job}");
+                Console.WriteLine($"레벨: {lv}");
+                Console.WriteLine($"공격력: {attack}");
+                Console.WriteLine($"방어력: {defense}");
+                Console.WriteLine($"체력: {hp}");
+                Console.WriteLine($"골드: {gold}");
+                Console.WriteLine("==================");
+            }
+            // 인벤토리 출력 메서드
+            public void ShowInventory()
+            {
+                Console.WriteLine("===== 인벤토리 =====");
+                if (inventory.Count == 0)
+                {
+                    Console.WriteLine("인벤토리가 비어 있습니다.");
+                }
+                else
+                {
+                    foreach (var item in inventory)
+                    {
+                        Console.WriteLine($"- {item}");
+                    }
+                }
+                Console.WriteLine("====================");
+            }
+
+            // 아이템 추가 메서드
+            public void AddItem(string item)
+            {
+                inventory.Add(item);
+            }
+
+            // 아이템 제거 메서드
+            public void RemoveItem(string item)
+            {
+                if (inventory.Contains(item))
+                {
+                    inventory.Remove(item);
+                    Console.WriteLine($"{item}을(를) 제거했습니다.");
+                }
+                else
+                {
+                    Console.WriteLine($"{item}은(는) 인벤토리에 없습니다.");
+                }
+            }
+        }
+        internal class Shop
+        {
+            private List<(string Name, int Price, int Attack, int Defense)> items; // 아이템 이름, 가격, 공격력, 방어력
+
+            public Shop()
+            {
+                items = new List<(string, int, int, int)>
+        {
+            ("롱소드", 500, 5, 0), // 공격력 5, 방어력 0
+            ("장궁", 500, 8, 0), // 공격력 8, 방어력 0
+            ("지팡이", 500, 10, 0), // 공격력 10, 방어력 0
+            ("스파르탄의 창", 500, 10, 0), // 공격력 10, 방어력 0
+            ("철방패", 500, 0, 10), // 공격력 0, 방어력 10
+            ("가죽갑옷", 500, 0, 5), // 공격력 0, 방어력 10
+            ("로브", 500, 0, 3) // 공격력 0, 방어력 10
+        };
+            }
+
+            public void ShowItems(character player)
+            {
+                Console.WriteLine("===== 상점 =====");
+                Console.WriteLine($"보유 골드: {player.Gold}G");
+                foreach (var item in items)
+                {
+                    Console.WriteLine($"{item.Name}: {item.Price}G (공격력 +{item.Attack}, 방어력 +{item.Defense})");
+                }
+                Console.WriteLine("================");
+            }
+
+            public void BuyItem(character player)
+            {
+                Console.WriteLine("구매할 아이템 이름을 입력하세요:");
+                string itemName = Console.ReadLine();
+
+                var item = items.Find(i => i.Name == itemName);
+                if (item.Name != null)
+                {
+                    if (player.Gold >= item.Price)
+                    {
+                        player.Gold -= item.Price;
+                        player.AddItem(item.Name);
+                        Console.WriteLine($"{item.Name}을(를) 구매를 완료했습니다. (공격력 +{item.Attack}, 방어력 +{item.Defense})");
+                    }
+                    else
+                    {
+                        Console.WriteLine("골드가 부족합니다.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("존재하지 않는 아이템입니다.");
+                }
+            }
+        }
+    }
+}
+        
+    
+
