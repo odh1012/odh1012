@@ -256,6 +256,7 @@
             {
                 Console.WriteLine("구매할 아이템 이름을 입력하세요:");
                 string itemName = Console.ReadLine();
+                Console.WriteLine
 
                 var item = items.Find(i => i.Name == itemName);
                 if (item.Name != null)
